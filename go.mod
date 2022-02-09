@@ -2,7 +2,10 @@ module github.com/heart-dance/seed
 
 go 1.17
 
-require github.com/urfave/cli/v2 v2.3.0
+require (
+	github.com/urfave/cli/v2 v2.3.0
+	github.com/gorilla/websocket v1.4.2 // indirect
+)
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect

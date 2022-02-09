@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/heart-dance/seed/src"
 	"github.com/urfave/cli/v2"
 )
 
@@ -16,6 +17,10 @@ var (
 		Name:  "web",
 		Usage: "web assets path",
 	}
+	profileFlag = &cli.StringFlag{
+		Name:  "profile",
+		Usage: "profile path",
+	}
 )
 
 func init() {
@@ -27,8 +32,11 @@ func init() {
 	RootCmd.Flags = []cli.Flag{
 		portFlag,
 		webFlag,
+		profileFlag,
 	}
 	RootCmd.Action = func(c *cli.Context) error {
+		var app = src.NewApplication()
+		app.Run()
 		return nil
 	}
 }
