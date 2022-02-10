@@ -1,8 +1,14 @@
-import path from "path";
-import WebpackMerge from "webpack-merge";
-const __dirname = path.dirname("");
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const baseConfig = {
+module.exports = {
+  mode: "development",
+  devtool: "inline-source-map",
+  entry: "./src/index.tsx",
+  output: {
+    filename: "[name].[chunkhash].js",
+    path: path.resolve(__dirname, "dist"),
+  },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     alias: {},
@@ -35,7 +41,7 @@ const baseConfig = {
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.(jpg|png|jpeg|gif)$/,
+        test: /\.(jpg|png|jpeg|gif|svg)$/,
         use: [
           {
             loader: "file-loader",
@@ -48,25 +54,6 @@ const baseConfig = {
       },
     ],
   },
-  plugins: [new CleanWebpackPlugin.CleanWebpackPlugin()],
-  experiments: {
-    outputModule: true,
-  },
-};
-
-const devConfig = {
-  mode: "development",
-  devtool: "inline-source-map",
-  entry: {
-    index: "./src/index.tsx",
-  },
-  output: {
-    filename: "[name].[chunkhash].js",
-    path: path.resolve(__dirname, "dist"),
-    library: {
-      type: "module",
-    },
-  },
   devServer: {
     compress: true,
     host: "127.0.0.1",
@@ -75,15 +62,9 @@ const devConfig = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      //   template: path.resolve(__dirname, "resources/template.html"),
+      template: path.resolve(__dirname, "public/index.html"),
       filename: "index.html",
-      chunks: ["index"],
+      //   chunks: ["index"],
     }),
   ],
 };
-
-const prodConfig = {};
-
-const config = WebpackMerge.merge(baseConfig, devConfig);
-
-export default config;

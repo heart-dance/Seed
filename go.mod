@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/gorilla/websocket v1.4.2
 )
 
 require (
