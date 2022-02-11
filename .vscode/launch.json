@@ -22,7 +22,7 @@
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceRoot}/",
-      "args": ["--host=0.0.0.0:8080", "--profile=./test"],
+      "args": ["--host=0.0.0.0:8080", "--profile=./test/app"],
       "output": "${workspaceRoot}/build/seed",
       "trace": "verbose",
       "showLog": true,

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"runtime"
 
+	"github.com/heart-dance/seed/src/app"
 	"github.com/urfave/cli/v2"
 )
 
@@ -39,16 +39,12 @@ func init() {
 		profileFlag,
 		webFlag,
 	}
-	RootCmd.Before = func(c *cli.Context) error {
-		return nil
-	}
 	RootCmd.Action = func(c *cli.Context) error {
-		fmt.Println(c.String("host"))
-		fmt.Println(c.String("profile"))
-		fmt.Println(c.String("web"))
-		// var app = src.NewApplication()
-		// app.Run()
-		return nil
+		var a, err = app.NewApplication(c.String("host"), c.String("profile"), c.String("web"))
+		if err != nil {
+			return err
+		}
+		return a.Run()
 	}
 }
 
