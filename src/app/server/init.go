@@ -17,9 +17,13 @@ type httpServe struct {
 func NewHttpServer() HttpServer {
 	r := mux.NewRouter()
 	h := NewHandler()
-	r.HandleFunc("/login", h.Login).Methods("POST")
-	r.HandleFunc("/add", h.Login).Methods("POST")
-	r.HandleFunc("/info", h.Login).Methods("GET")
+	r.Use(AuthMdiddleware("123", "123").Middleware)
+	s := r.PathPrefix("/api/v1").Subrouter()
+	// s.HandleFunc("/login", h.Login).Methods("POST")
+	s.HandleFunc("/task", h.Add).Methods("POST")
+	s.HandleFunc("/task", h.Info).Methods("GET")
+	s.HandleFunc("/config", h.GetConfig).Methods("GET")
+	s.HandleFunc("/config", h.UpdateConfig).Methods("PUT")
 
 	return &httpServe{
 		srv: &http.Server{

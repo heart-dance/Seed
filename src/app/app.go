@@ -12,8 +12,13 @@ type Application struct {
 }
 
 func NewApplication(version, host, profile, web string) (*Application, error) {
+	if err := CheckProfile(profile); err != nil {
+		return nil, err
+	}
+
+	NewDB(profile)
+
 	logger := NewLogger("dev", "./test/app/data/log")
-	logger.Debug("Starting application")
 	logger.Info("Starting application")
 	return &Application{
 		version: version,

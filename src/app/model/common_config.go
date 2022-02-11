@@ -1,8 +1,4 @@
-package app
-
-import (
-	"github.com/timshannon/bolthold"
-)
+package model
 
 type Config struct {
 	Name          string `json:"name"`
@@ -11,8 +7,4 @@ type Config struct {
 	ProfileData   string `json:"profile_data"`
 	ProfileCache  string `json:"profile_cache"`
 	ProfileConfig string `json:"profile_config"`
-}
-
-func GetConfigDB() {
-	bolthold.Open("", 0666, nil)
 }
