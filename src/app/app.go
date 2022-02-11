@@ -6,16 +6,19 @@ import (
 )
 
 type Application struct {
-	srv    server.HttpServer
-	logger *zap.Logger
+	version string
+	srv     server.HttpServer
+	logger  *zap.Logger
 }
 
-func NewApplication(host, profile, web string) (*Application, error) {
+func NewApplication(version, host, profile, web string) (*Application, error) {
 	logger := NewLogger("dev", "./test/app/data/log")
+	logger.Debug("Starting application")
 	logger.Info("Starting application")
 	return &Application{
-		srv:    server.NewHttpServer(),
-		logger: logger,
+		version: version,
+		srv:     server.NewHttpServer(),
+		logger:  logger,
 	}, nil
 }
 

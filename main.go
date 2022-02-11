@@ -40,7 +40,7 @@ func init() {
 		webFlag,
 	}
 	RootCmd.Action = func(c *cli.Context) error {
-		var a, err = app.NewApplication(c.String("host"), c.String("profile"), c.String("web"))
+		var a, err = app.NewApplication(version, c.String("host"), c.String("profile"), c.String("web"))
 		if err != nil {
 			return err
 		}
