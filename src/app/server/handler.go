@@ -1,6 +1,13 @@
 package server
 
-import "net/http"
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/heart-dance/seed/src/app/db"
+	"go.uber.org/zap"
+)
 
 type Handler interface {
 	Login(w http.ResponseWriter, r *http.Request)
@@ -10,10 +17,16 @@ type Handler interface {
 	UpdateConfig(w http.ResponseWriter, r *http.Request)
 }
 
-type handler struct{}
+type handler struct {
+	logger *zap.Logger
+	db     db.DB
+}
 
-func NewHandler() Handler {
-	return &handler{}
+func NewHandler(logger *zap.Logger, db db.DB) Handler {
+	return &handler{
+		logger: logger,
+		db:     db,
+	}
 }
 
 func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +42,16 @@ func (h *handler) Info(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *handler) GetConfig(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("getconfig"))
+	var query = r.URL.Query()
+	h.logger.Debug(fmt.Sprintf("get key %v", query.Get("key")))
+	w.Header().Set("Content-Type", "application/json")
+	if query.Get("key") == "common_config" {
+		var data = h.db.GetCommonConfigData()
+		json.NewEncoder(w).Encode(data)
+	} else if query.Get("key") == "web_config" {
+		var data = h.db.GetWebConfigData()
+		json.NewEncoder(w).Encode(data)
+	}
 }
 
 func (h *handler) UpdateConfig(w http.ResponseWriter, r *http.Request) {

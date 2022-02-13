@@ -26,11 +26,19 @@ var (
 		Required: true,
 		Usage:    "profile path",
 	}
+	releaseFlag = &cli.BoolFlag{
+		Name:  "release",
+		Value: true,
+	}
+	debugFlag = &cli.BoolFlag{
+		Name:  "debug",
+		Value: false,
+	}
 )
 
 func init() {
-	RootCmd.Copyright = "Copyright © 2020 gsxhnd"
-	RootCmd.Usage = "A Download Tool"
+	RootCmd.Copyright = "Copyright © 2020 HeartDance"
+	RootCmd.Usage = "A Remote Download Tool"
 	RootCmd.Commands = nil
 	RootCmd.HideHelpCommand = true
 	RootCmd.Version = version + " " + runtime.GOARCH + "/" + runtime.GOOS
@@ -38,9 +46,20 @@ func init() {
 		hostFlag,
 		profileFlag,
 		webFlag,
+		debugFlag,
+		releaseFlag,
 	}
 	RootCmd.Action = func(c *cli.Context) error {
-		var a, err = app.NewApplication(version, c.String("host"), c.String("profile"), c.String("web"))
+		var runMode = "dev"
+		if c.Bool("release") {
+			if c.Bool("debug") {
+				runMode = "debug"
+			} else {
+				runMode = "prod"
+			}
+		}
+
+		var a, err = app.NewApplication(version, c.String("host"), c.String("profile"), c.String("web"), runMode)
 		if err != nil {
 			return err
 		}

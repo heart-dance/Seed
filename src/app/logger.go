@@ -12,7 +12,7 @@ import (
 
 var (
 	debugLevel = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
-		return lvl < zapcore.InfoLevel
+		return lvl >= zapcore.DebugLevel
 	})
 	infoLevel = zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl < zapcore.WarnLevel && lvl > zapcore.DebugLevel
@@ -47,7 +47,7 @@ func NewLogger(run_mode, path string) *zap.Logger {
 	if run_mode == "dev" {
 		return getDevLogger()
 	} else if run_mode == "debug" {
-		return getDebugLogger()
+		return getDebugLogger(path)
 	} else if run_mode == "prod" {
 		return getProdLogger(path)
 	}
@@ -61,9 +61,9 @@ func getDevLogger() *zap.Logger {
 	return zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
 }
 
-func getDebugLogger() *zap.Logger {
+func getDebugLogger(path string) *zap.Logger {
 	var core = zapcore.NewTee(
-		zapcore.NewCore(devEncoder, os.Stdout, zap.DebugLevel),
+		zapcore.NewCore(prodEncoder, getHook(path, "seed-debug.log"), debugLevel),
 	)
 	return zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
 }

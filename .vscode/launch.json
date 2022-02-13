@@ -5,24 +5,40 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Seed Help",
+      "name": "Seed Run Dev",
       "type": "go",
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceRoot}/",
-      "args": ["--help"],
+      "args": [
+        "--host=0.0.0.0:8080",
+        "--profile=./test/app",
+        "--release=false"
+      ],
       "output": "${workspaceRoot}/build/seed",
       "trace": "verbose",
       "showLog": true,
       "cwd": "${workspaceRoot}"
     },
     {
-      "name": "Seed Run",
+      "name": "Seed Run Debug",
       "type": "go",
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceRoot}/",
-      "args": ["--host=0.0.0.0:8080", "--profile=./test/app"],
+      "args": ["--host=0.0.0.0:8080", "--profile=./test/app", "--debug"],
+      "output": "${workspaceRoot}/build/seed",
+      "trace": "verbose",
+      "showLog": true,
+      "cwd": "${workspaceRoot}"
+    },
+    {
+      "name": "Seed Help",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceRoot}/",
+      "args": ["--help"],
       "output": "${workspaceRoot}/build/seed",
       "trace": "verbose",
       "showLog": true,

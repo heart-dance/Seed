@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"os"
 )
 
@@ -16,7 +15,7 @@ func CheckProfile(profile string) error {
 }
 
 func CheckProfileDir(path string) error {
-	f, err := os.Stat(path)
+	_, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
 			os.MkdirAll(path, os.ModePerm)
@@ -25,12 +24,11 @@ func CheckProfileDir(path string) error {
 			return nil
 		}
 	}
-	fmt.Println(f.Name())
 	return nil
 }
 
 func CheckProfileConfigDir(path string) error {
-	f, err := os.Stat(path)
+	_, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
 			os.MkdirAll(path, os.ModePerm)
@@ -39,6 +37,5 @@ func CheckProfileConfigDir(path string) error {
 			return nil
 		}
 	}
-	fmt.Println(f.Name())
 	return nil
 }

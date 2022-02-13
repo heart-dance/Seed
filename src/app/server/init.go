@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/heart-dance/seed/src/app/db"
+	"go.uber.org/zap"
 )
 
 type HttpServer interface {
@@ -11,12 +13,13 @@ type HttpServer interface {
 }
 
 type httpServe struct {
-	srv *http.Server
+	srv    *http.Server
+	logger *zap.Logger
 }
 
-func NewHttpServer() HttpServer {
+func NewHttpServer(logger *zap.Logger, db db.DB) HttpServer {
 	r := mux.NewRouter()
-	h := NewHandler()
+	h := NewHandler(logger, db)
 	r.Use(AuthMdiddleware("123", "123").Middleware)
 	s := r.PathPrefix("/api/v1").Subrouter()
 	// s.HandleFunc("/login", h.Login).Methods("POST")
@@ -26,6 +29,7 @@ func NewHttpServer() HttpServer {
 	s.HandleFunc("/config", h.UpdateConfig).Methods("PUT")
 
 	return &httpServe{
+		logger: logger,
 		srv: &http.Server{
 			Addr:    ":8080",
 			Handler: r,
@@ -34,6 +38,7 @@ func NewHttpServer() HttpServer {
 }
 
 func (s *httpServe) Run() error {
+	s.logger.Info("Starting http server")
 	s.srv.ListenAndServe()
 	return nil
 }
