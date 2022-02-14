@@ -1,28 +1,46 @@
 package server
 
-import "net/http"
+import (
+	"net/http"
 
-type HTTPAuthMiddle struct {
-	user     string
-	password string
+	"github.com/heart-dance/seed/src/app/db"
+	"go.uber.org/zap"
+)
+
+type Middleware interface {
+	AuthMiddleware(next http.Handler) http.Handler
+	LoggingMiddleware(next http.Handler) http.Handler
+}
+type middleware struct {
+	logger *zap.Logger
+	db     db.DB
 }
 
-func AuthMdiddleware(username, password string) *HTTPAuthMiddle {
-	return &HTTPAuthMiddle{
-		user:     username,
-		password: password,
+func NewMiddleware(logger *zap.Logger, configDB db.DB) Middleware {
+	return &middleware{
+		logger: logger,
+		db:     configDB,
 	}
 }
 
-func (m *HTTPAuthMiddle) Middleware(next http.Handler) http.Handler {
+func (m *middleware) AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		reqUser, reqPasswd, hasAuth := r.BasicAuth()
-		if (m.user == "" && m.password == "") ||
-			(hasAuth && reqUser == m.user && reqPasswd == m.password) {
+		if (m.db.GetWebAuthUser() == "" && m.db.GetWebAuthPwd() == "") ||
+			(hasAuth && reqUser == m.db.GetWebAuthUser() && reqPasswd == m.db.GetWebAuthPwd()) {
 			next.ServeHTTP(w, r)
 		} else {
 			w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		}
+	})
+}
+
+func (m *middleware) LoggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Do stuff here
+		m.logger.Debug("Request: " + r.Method + " " + r.URL.Path)
+		// Call the next handler, which can be another middleware in the chain, or the final handler.
+		next.ServeHTTP(w, r)
 	})
 }

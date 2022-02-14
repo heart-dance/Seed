@@ -21,8 +21,8 @@ func NewApplication(version, host, profile, web, runMode string) (*Application, 
 	logPath := filepath.Join(profile, "log")
 
 	logger := NewLogger(runMode, logPath)
-	logger.Info("Starting application.")
-	logger.Info("Application version: " + version + " run mode: " + runMode)
+	logger.Debug("Starting application.")
+	logger.Debug("Application version: " + version + " run mode: " + runMode)
 	db := db.NewDB(version, profile, host, web, logger)
 
 	return &Application{

@@ -20,7 +20,9 @@ type httpServe struct {
 func NewHttpServer(logger *zap.Logger, db db.DB) HttpServer {
 	r := mux.NewRouter()
 	h := NewHandler(logger, db)
-	r.Use(AuthMdiddleware("123", "123").Middleware)
+	m := NewMiddleware(logger, db)
+	r.Use(m.AuthMiddleware)
+	r.Use(m.LoggingMiddleware)
 	s := r.PathPrefix("/api/v1").Subrouter()
 	// s.HandleFunc("/login", h.Login).Methods("POST")
 	s.HandleFunc("/task", h.Add).Methods("POST")
@@ -43,7 +45,7 @@ func NewHttpServer(logger *zap.Logger, db db.DB) HttpServer {
 }
 
 func (s *httpServe) Run() error {
-	s.logger.Info("Starting http server, listening on port: " + s.srv.Addr)
+	s.logger.Debug("Starting http server, listening on port: " + s.srv.Addr)
 	s.srv.ListenAndServe()
 	return nil
 }

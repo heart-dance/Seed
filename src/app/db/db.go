@@ -12,6 +12,8 @@ type DB interface {
 	GetWebConfig() (webConfigData, error)
 	GetCommonConfigData() commonConfigData
 	GetWebConfigData() webConfigData
+	GetWebAuthUser() string
+	GetWebAuthPwd() string
 }
 
 type db struct {
@@ -40,8 +42,10 @@ type commonConfigData struct {
 }
 
 type webConfigData struct {
-	WebHost   string `json:"web_host"`
-	WebUIPath string `json:"web_ui_path"`
+	WebHost     string `json:"web_host"`
+	WebUIPath   string `json:"web_ui_path"`
+	WebAuthUser string `json:"web_auth_user"`
+	WebAuthPwd  string `json:"web_auth_pwd"`
 }
 
 func (d *db) initData(version, profile, host, webPath string) error {
@@ -81,8 +85,10 @@ func (d *db) initCommonConfigData(version, profile string) error {
 
 func (d *db) initWebConfigData(host, path string) error {
 	var initData = webConfigData{
-		WebHost:   host,
-		WebUIPath: path,
+		WebHost:     host,
+		WebUIPath:   path,
+		WebAuthUser: "admin",
+		WebAuthPwd:  "admin",
 	}
 	var data webConfigData
 	err := d.ConfigDB.Get("web_config", &data)
@@ -98,6 +104,12 @@ func (d *db) initWebConfigData(host, path string) error {
 		}
 	} else {
 		d.webConfigData = data
+		if host != "" {
+			d.webConfigData.WebHost = host
+		}
+		if path != "" {
+			d.webConfigData.WebUIPath = path
+		}
 		return nil
 	}
 }

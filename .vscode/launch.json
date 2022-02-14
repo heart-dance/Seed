@@ -13,7 +13,8 @@
       "args": [
         "--host=0.0.0.0:8080",
         "--profile=./test/app",
-        "--release=false"
+        "--release=false",
+        "--web=./test/web"
       ],
       "output": "${workspaceRoot}/build/seed",
       "trace": "verbose",
@@ -26,7 +27,12 @@
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceRoot}/",
-      "args": ["--host=0.0.0.0:8080", "--profile=./test/app", "--debug"],
+      "args": [
+        "--host=0.0.0.0:8080",
+        "--profile=./test/app",
+        "--debug",
+        "--web=./test/web"
+      ],
       "output": "${workspaceRoot}/build/seed",
       "trace": "verbose",
       "showLog": true,

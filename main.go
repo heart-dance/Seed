@@ -13,14 +13,12 @@ var RootCmd = cli.NewApp()
 var (
 	version  = "0.0.1"
 	hostFlag = &cli.StringFlag{
-		Name:     "host",
-		Required: true,
-		Usage:    "listen host",
+		Name:  "host",
+		Usage: "listen host",
 	}
 	webFlag = &cli.StringFlag{
-		Name:     "web",
-		Required: true,
-		Usage:    "web assets path",
+		Name:  "web",
+		Usage: "web assets path",
 	}
 	profileFlag = &cli.StringFlag{
 		Name:     "profile",
