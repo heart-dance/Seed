@@ -8,7 +8,7 @@ func CheckProfile(profile string) error {
 	if err := CheckProfileDir(profile); err != nil {
 		return err
 	}
-	if err := CheckProfileConfigDir(profile + "/config"); err != nil {
+	if err := CheckProfileLogDir(profile + "/log"); err != nil {
 		return err
 	}
 	return nil
@@ -27,7 +27,7 @@ func CheckProfileDir(path string) error {
 	return nil
 }
 
-func CheckProfileConfigDir(path string) error {
+func CheckProfileLogDir(path string) error {
 	_, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {

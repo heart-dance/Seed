@@ -21,7 +21,7 @@ type db struct {
 	webConfigData    webConfigData
 }
 
-func NewDB(version, profile string, logger *zap.Logger) DB {
+func NewDB(version, profile, host, webPath string, logger *zap.Logger) DB {
 	configPath := filepath.Join(profile, "/config.db")
 	confDB, _ := bolthold.Open(configPath, 0666, nil)
 
@@ -29,7 +29,7 @@ func NewDB(version, profile string, logger *zap.Logger) DB {
 		logger:   logger,
 		ConfigDB: confDB,
 	}
-	_ = newDB.initData(version, profile)
+	_ = newDB.initData(version, profile, host, webPath)
 	return newDB
 }
 
@@ -44,11 +44,11 @@ type webConfigData struct {
 	WebUIPath string `json:"web_ui_path"`
 }
 
-func (d *db) initData(version, profile string) error {
+func (d *db) initData(version, profile, host, webPath string) error {
 	if err := d.initCommonConfigData(version, profile); err != nil {
 		return err
 	}
-	if err := d.initWebConfigData(); err != nil {
+	if err := d.initWebConfigData(host, webPath); err != nil {
 		return err
 	}
 
@@ -79,8 +79,11 @@ func (d *db) initCommonConfigData(version, profile string) error {
 	}
 }
 
-func (d *db) initWebConfigData() error {
-	var initData = webConfigData{}
+func (d *db) initWebConfigData(host, path string) error {
+	var initData = webConfigData{
+		WebHost:   host,
+		WebUIPath: path,
+	}
 	var data webConfigData
 	err := d.ConfigDB.Get("web_config", &data)
 	if err != nil {

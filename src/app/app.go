@@ -9,10 +9,9 @@ import (
 )
 
 type Application struct {
-	version string
-	srv     server.HttpServer
-	logger  *zap.Logger
-	db      db.DB
+	logger *zap.Logger
+	db     db.DB
+	srv    server.HttpServer
 }
 
 func NewApplication(version, host, profile, web, runMode string) (*Application, error) {
@@ -24,13 +23,12 @@ func NewApplication(version, host, profile, web, runMode string) (*Application, 
 	logger := NewLogger(runMode, logPath)
 	logger.Info("Starting application.")
 	logger.Info("Application version: " + version + " run mode: " + runMode)
-	db := db.NewDB(version, profile, logger)
+	db := db.NewDB(version, profile, host, web, logger)
 
 	return &Application{
-		version: version,
-		srv:     server.NewHttpServer(logger, db),
-		logger:  logger,
-		db:      db,
+		logger: logger,
+		db:     db,
+		srv:    server.NewHttpServer(logger, db),
 	}, nil
 }
 

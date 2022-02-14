@@ -28,17 +28,22 @@ func NewHttpServer(logger *zap.Logger, db db.DB) HttpServer {
 	s.HandleFunc("/config", h.GetConfig).Methods("GET")
 	s.HandleFunc("/config", h.UpdateConfig).Methods("PUT")
 
+	if db.GetWebConfigData().WebUIPath != "" {
+		logger.Debug("Http server enable webui, path:" + db.GetWebConfigData().WebUIPath)
+		r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(db.GetWebConfigData().WebUIPath))))
+	}
+
 	return &httpServe{
 		logger: logger,
 		srv: &http.Server{
-			Addr:    ":8080",
+			Addr:    db.GetWebConfigData().WebHost,
 			Handler: r,
 		},
 	}
 }
 
 func (s *httpServe) Run() error {
-	s.logger.Info("Starting http server")
+	s.logger.Info("Starting http server, listening on port: " + s.srv.Addr)
 	s.srv.ListenAndServe()
 	return nil
 }

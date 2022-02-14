@@ -18,8 +18,9 @@ var (
 		Usage:    "listen host",
 	}
 	webFlag = &cli.StringFlag{
-		Name:  "web",
-		Usage: "web assets path",
+		Name:     "web",
+		Required: true,
+		Usage:    "web assets path",
 	}
 	profileFlag = &cli.StringFlag{
 		Name:     "profile",
