@@ -3,8 +3,8 @@ package app
 import (
 	"path/filepath"
 
-	"github.com/heart-dance/seed/src/app/db"
-	"github.com/heart-dance/seed/src/app/server"
+	"github.com/heart-dance/seed/app/db"
+	"github.com/heart-dance/seed/app/server"
 	"go.uber.org/zap"
 )
 

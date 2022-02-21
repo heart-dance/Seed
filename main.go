@@ -4,7 +4,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/heart-dance/seed/src/app"
+	"github.com/heart-dance/seed/app"
 	"github.com/urfave/cli/v2"
 )
 

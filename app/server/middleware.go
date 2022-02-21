@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/heart-dance/seed/src/app/db"
+	"github.com/heart-dance/seed/app/db"
 	"go.uber.org/zap"
 )
 

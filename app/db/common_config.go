@@ -1,6 +1,6 @@
 package db
 
-import "github.com/heart-dance/seed/src/app/model"
+import "github.com/heart-dance/seed/app/model"
 
 func (d *db) GetCommonConfig() (commonConfigData, error) {
 	var data commonConfigData
