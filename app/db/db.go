@@ -88,7 +88,7 @@ func (d *db) initWebConfigData(host, path string) error {
 		WebHost:     host,
 		WebUIPath:   path,
 		WebAuthUser: "admin",
-		WebAuthPwd:  "admin",
+		WebAuthPwd:  "adminadmin",
 	}
 	var data webConfigData
 	err := d.ConfigDB.Get("web_config", &data)
